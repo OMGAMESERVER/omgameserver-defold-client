@@ -1,2 +1,2 @@
 # omgameserver-defold-client
-Implementation client for omgameserver as Defold library
+Implementation of client for omgameserver as Defold library
