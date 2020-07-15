@@ -127,7 +127,7 @@ end
 M.write_short = write_short
 
 local function read_unsigned_int(buffer)
-	local buffer_read_position = self.read_position
+	local buffer_read_position = buffer.read_position
 
 	local b4, b3, b2, b1 = string_byte(buffer.bytes, buffer_read_position, buffer_read_position + 3)
 	local value = b1 + b2 * 256 + b3 * 65536 + b4 * 16777216
