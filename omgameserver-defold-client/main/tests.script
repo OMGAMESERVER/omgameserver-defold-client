@@ -1,0 +1,5 @@
+local tests = require("tests.tests")
+
+function init(self)
+	tests.run()
+end
