@@ -1,5 +1,4 @@
 local buffer = require("omgameserver.buffer")
--- local msgpack = require("omgameserver.msgpack")
 
 local function test_buffer_from_bytes()
 	local b1 = buffer.create_empty()
@@ -116,7 +115,7 @@ local function test_buffer_get_hex()
 	assert("00 00 00 10 00 00 00 0C 00 00 07 C7" == buffer.get_hex(b1))
 end
 
-local testSuit = function()
+local buffer_test_suite = function()
 	test_buffer_from_bytes()
 	test_buffer_get_length()
 	test_buffer_remaining()
@@ -135,4 +134,4 @@ local testSuit = function()
 	print("[OMGS/TESTS] test suite for buffer: passed")
 end
 
-return testSuit
+return buffer_test_suite
