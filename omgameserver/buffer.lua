@@ -317,7 +317,7 @@ end
 M.write_string = write_string
 
 local function write_buffer(target, source)
-	return write_bytes(target, source.bytes)
+	return write_bytes(target, string_sub(source.bytes, source.read_position))
 end
 M.write_buffer = write_buffer
 
@@ -326,18 +326,19 @@ get_hex = function(buffer)
 		return ""
 	else
 		local self_bytes = buffer.bytes
-		local result = string_format("%X", string_byte(self_bytes, 1))
+		local hex = {}	
+		-- local result = string_format("%X", string_byte(self_bytes, 1))
 
-		for index = 2, #self_bytes do
+		for index = 1, #self_bytes do
 			local h = string_format("%X", string_byte(self_bytes, index))
 			if (#h == 1) then
-				result = result .. " 0".. h
+				hex[#hex + 1] = "0".. h
 			else
-				result = result .. " " .. h
+				hex[#hex + 1] = h
 			end
 		end
 
-		return result
+		return table.concat(hex, " ")
 	end
 end
 M.get_hex = get_hex

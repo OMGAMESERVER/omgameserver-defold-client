@@ -1,5 +1,5 @@
-local tests = require("tests.tests")
+local full_test_suite = require("tests.full_test_suite")
 
 function init(self)
-	tests.run()
+	full_test_suite()
 end
