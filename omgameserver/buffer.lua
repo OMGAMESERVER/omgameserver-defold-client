@@ -326,8 +326,7 @@ get_hex = function(buffer)
 		return ""
 	else
 		local self_bytes = buffer.bytes
-		local hex = {}	
-		-- local result = string_format("%X", string_byte(self_bytes, 1))
+		local hex = {}
 
 		for index = 1, #self_bytes do
 			local h = string_format("%X", string_byte(self_bytes, index))
