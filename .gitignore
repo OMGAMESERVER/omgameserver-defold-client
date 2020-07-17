@@ -8,3 +8,6 @@ Thumbs.db
 .project
 .cproject
 builtins
+
+.idea
+*.iml
