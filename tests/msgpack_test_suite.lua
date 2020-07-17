@@ -31,6 +31,13 @@ local test_data = {
 		},
 		msgpack_buffer = create_buffer_from_byte_array({136, 175, 112, 111, 115, 105, 116, 105, 118, 101, 95, 102, 105, 120, 105, 110, 116, 64, 165, 117, 110, 105, 116, 56, 204, 160, 166, 117, 110, 105, 116, 49, 54, 205, 4, 0, 166, 117, 105, 110, 116, 51, 50, 206, 0, 15, 255, 255, 175, 110, 101, 103, 97, 116, 105, 118, 101, 95, 102, 105, 120, 105, 110, 116, 240, 164, 105, 110, 116, 56, 208, 192, 165, 105, 110, 116, 49, 54, 209, 240, 1, 165, 105, 110, 116, 51, 50, 210, 240, 0, 0, 1}),
 	},
+	big_integer = {
+		lua_table = {
+			uint64 = 12345678901, 
+			int64 = 98765432109,
+		},
+		msgpack_buffer = create_buffer_from_byte_array({130, 166, 117, 105, 110, 116, 54, 52, 207, 66, 6, 254, 224, 225, 168, 0, 0, 165, 105, 110, 116, 54, 52, 211, 66, 54, 254, 224, 229, 45, 0, 0}),
+	},
 	strings = {
 		lua_table = {
 			fixstr = "Fixstr",
@@ -75,6 +82,11 @@ local function test_msgpack_integer()
 	assert(compare_table(test_data.integer.lua_table, msgpack.decode(msgpack.encode(test_data.integer.lua_table))) == true)
 end
 
+local function test_msgpack_big_integer()
+	assert(compare_table(test_data.big_integer.lua_table, msgpack.decode(test_data.big_integer.msgpack_buffer)) == true)
+	assert(compare_table(test_data.big_integer.lua_table, msgpack.decode(msgpack.encode(test_data.big_integer.lua_table))) == true)
+end
+
 local function test_msgpack_strings()
 	assert(compare_table(test_data.strings.lua_table, msgpack.decode(test_data.strings.msgpack_buffer)) == true)
 	assert(compare_table(test_data.strings.lua_table, msgpack.decode(msgpack.encode(test_data.strings.lua_table))) == true)
@@ -94,6 +106,7 @@ local msgpack_test_suite = function()
 	test_msgpack_simpletest()
 	test_msgpack_boolean()
 	test_msgpack_integer()
+	test_msgpack_big_integer()
 	test_msgpack_strings()
 	test_msgpack_array()
 	test_msgpack_map()
