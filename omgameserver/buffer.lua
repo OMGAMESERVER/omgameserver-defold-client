@@ -187,9 +187,9 @@ local function read_float(buffer)
 		sign = -1
 	end
 
-	local m = (((b3 % 128) * 65536 + b2 * 256 + b1) / 8388608 + 1) * sign
+	local m = (b3 % 128) * 65536 + b2 * 256 + b1
 
-	return math_ldexp(m, e - 127)
+	return math_ldexp(m / 8388608 + 1, e - 127) * sign
 end
 M.read_float = read_float
 
@@ -229,7 +229,7 @@ local function read_double(buffer)
 
 	buffer.read_position = buffer_read_position + 8
 
-	local e = (b8 % 128) * 2 + math_floor(b7 / 16)
+	local e = (b8 % 128) * 16 + math_floor(b7 / 16)
 	if (e == 0) then
 		return 0
 	end
@@ -239,14 +239,9 @@ local function read_double(buffer)
 		sign = -1
 	end
 
-	local m = (((b7 % 16) * 281474976710656 + 
-	b6 * 1099511627776 + 
-	b5 * 4294967296 + 
-	b4 * 16777216 + 
-	b3 * 65536 + 
-	b2 * 256 + b1) / 4503599627370496 + 1) * sign
+	local m = (b7 % 16) * 281474976710656 + b6 * 1099511627776 + b5 * 4294967296 + b4 * 16777216 + b3 * 65536 + b2 * 256 + b1
 
-	return math_ldexp(m, e - 127)
+	return math_ldexp(m / 4503599627370496 + 1, e - 1023) * sign
 end
 M.read_double = read_double
 
