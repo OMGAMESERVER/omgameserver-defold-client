@@ -81,7 +81,7 @@ local function encode_value(value)
 				end
 			end
 
-			-- float
+		-- float
 		else
 			-- TODO pack as float64 (0xcb)
 			buffer_write_unsigned_byte(buffer, 0xca)
@@ -109,7 +109,7 @@ local function encode_value(value)
 	elseif (value_type == "table") then
 		local elements = {}
 
-		-- It seems to be a proper Lua array
+		-- proper lua array
 		if (is_an_array(value)) then
 			for _, v in pairs(value) do
 				elements[#elements + 1] = encode_value(v)
@@ -125,7 +125,7 @@ local function encode_value(value)
 				buffer_write_unsigned_int(buffer, length)
 			end
 
-			-- Encode as a map
+		-- encode as a map
 		else
 			for k, v in pairs(value) do
 				elements[#elements + 1] = encode_value(k)
