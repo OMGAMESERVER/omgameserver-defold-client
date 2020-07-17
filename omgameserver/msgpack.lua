@@ -302,7 +302,7 @@ function M.encode(table)
 		if ok then
 			return data
 		else
-			return nil, table .. " cannot encode to msgpack"
+			return nil, "table cannot encode to msgpack buffer"
 		end
 	end
 end
@@ -316,7 +316,7 @@ function M.decode(buffer)
 		if ok then
 			return data
 		else
-			return nil, buffer .. " cannot decode from msgpack"
+			return nil, "buffer cannot decode to lua object"
 		end
 	end
 end
