@@ -1,5 +1,0 @@
-local full_test_suite = require("tests.full_test_suite")
-
-function init(self)
-	full_test_suite()
-end

@@ -25,7 +25,10 @@ local LOGGING_TRACE = 5
 -- Current client state
 local CLIENT = {}
 
-local function init_client(udp, settings, handler)
+local function init_client(udp, settings, handler)	
+	local settings = settings or {}
+	local handler = handler or {}
+	
 	CLIENT = {}
 
 	-- Socket
@@ -33,11 +36,11 @@ local function init_client(udp, settings, handler)
 
 	-- Settings
 	CLIENT.buffer_size = settings.buffer_size or 1024
-	CLIENT.disconnect_interval= settings.disconnect_interval or 5000
-	CLIENT.tick_interval = settings.tick_interval or 100
-	CLIENT.ping_interval = settings.ping_interval or 500
+	CLIENT.disconnect_interval = settings.disconnect_interval or 5
+	CLIENT.tick_interval = settings.tick_interval or 0.1
+	CLIENT.ping_interval = settings.ping_interval or 0.5
 	CLIENT.loss_simulation_level = settings.loss_simulation_level or 0
-
+	
 	-- Logging
 	CLIENT.logging = settings.logging or LOGGING_INFO
 
@@ -66,26 +69,30 @@ end
 
 --[[
 	options = {
-		hostname,
-		port,
+		hostname - server hostname,
+		port - server port,
 		settings = {
-			buffer_size,
-			disconnect_interval,
-			tick_interval,
-			ping_interval,
-			loss_simulation_level,
-			logging
+			buffer_size - datagrams size limit in bytes,
+			disconnect_interval - disconnect interval in seconds,
+			tick_interval - tick interval in seconds,
+			ping_interval - ping server interval in seconds,
+			loss_simulation_level - simulation of server's datagrams loss,
+			logging - level of logging
 		}
 		handler = {
 			connected = function(self),
 			closed = function(self),
-			received = function(self, { data }),
-			pong = function(self, { latency }),
+			received = function(self, value),
+			pong = function(self, latency),
 			tick = function(self),
 		},
 	},
 ]]--
 local function connect(options)
+	assert(options, "[OMGS/CLIENT] hostname/port not defined")
+	assert(options.hostname, "[OMGS/CLIENT] hostname not defined")
+	assert(options.port, "[OMGS/CLIENT] port not defined")
+	
 	if (CLIENT.udp) then
 		if (CLIENT.logging >= LOGGING_INFO) then
 			print("[OMGS/CLIENT] client already connected")
@@ -114,15 +121,17 @@ local function connect(options)
 
 	udp:settimeout(0)
 
-	init_client(udp, options.settings, options.handler)
+	init_client(udp, options.settings or nil, options.handler)
 
 	if (CLIENT.logging >= LOGGING_INFO) then
-		print("[OMGS/CLIENT] connected to hostname=" .. options.hostname .. ":" .. options.port)
+		print("[OMGS/CLIENT] connected to " .. options.hostname .. ":" .. options.port)
 	end
 
 	if (CLIENT.handler and CLIENT.handler.connected) then
 		CLIENT.handler:connected()
 	end
+
+	return 1
 end
 
 local function close()
@@ -387,7 +396,7 @@ local function flush()
 	end
 
 	if (CLIENT.empty) then
-		return nil, "client empty"
+		return
 	end
 
 	local next = create_next_buffer(HEADER_SYS_NOVALUE)
@@ -468,5 +477,15 @@ end
 
 -- Export local functions
 return {
-
+	-- Constants
+	LOGGING_ERROR = LOGGING_ERROR,
+	LOGGING_WARN = LOGGING_WARN,
+	LOGGING_INFO = LOGGING_INFO,
+	LOGGING_DEBUG = LOGGING_DEBUG,
+	LOGGING_TRACE = LOGGING_TRACE,
+	-- Methods
+	connect = connect,
+	closse = close,
+	send = send,
+	update = update,
 }

@@ -1,7 +1,27 @@
 name: "main"
 instances {
-  id: "tests"
-  prototype: "/main/tests.go"
+  id: "full_test_suite"
+  prototype: "/main/full_test_suite.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "udp_client_tester"
+  prototype: "/main/udp_client_tester.go"
   position {
     x: 0.0
     y: 0.0

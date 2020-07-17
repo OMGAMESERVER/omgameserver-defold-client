@@ -1,6 +1,6 @@
 components {
-  id: "tests"
-  component: "/main/tests.script"
+  id: "full_test_suite"
+  component: "/main/full_test_suite.script"
   position {
     x: 0.0
     y: 0.0
