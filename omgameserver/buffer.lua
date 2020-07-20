@@ -15,12 +15,12 @@ local get_length
 local get_hex
 
 local function create_empty()
-	local buffer = {
+	local buffer = setmetatable({}, {
 		__tostring = function(self)
 			return "[pos=" .. self.read_position .. ", len=" .. get_length(self)
 			.. ", hex=\"" .. get_hex(self) .. "\"]"
 		end,
-	}
+	})
 	buffer.bytes = ""
 	buffer.read_position = 1
 
