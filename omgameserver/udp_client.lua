@@ -370,7 +370,7 @@ local function send(value, reliable)
 		end
 
 		if (CLIENT.logging >= LOGGING_TRACE) then
-			print("[OMGS/CLIENT] send buffer " .. b)
+			print("[OMGS/CLIENT] send buffer " .. tostring(b))
 		end
 
 		-- Add to outgoing list
