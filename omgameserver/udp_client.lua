@@ -60,9 +60,6 @@ local function init_client(udp, settings, handler)
 	CLIENT.outgoing = {}
 	CLIENT.empty = true
 
-	CLIENT.reliable = {}
-	CLIENT.ephemeral = {}
-
 	CLIENT.saved = {}
 	CLIENT.outgoing_seq = {}
 end
