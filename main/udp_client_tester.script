@@ -1,29 +1,36 @@
 local udp_client = require("omgameserver.udp_client")
-local client = nil
+
+local number = 1
 
 function init(self)
 	local r, error = udp_client.connect({
 		hostname = "localhost",
 		port = 12345,
 		settings = {
-			loss_simulation_level = 0.2,
+			tick_interval = 1,
+			loss_simulation_level = 0,
 			logging = udp_client.LOGGING_TRACE
 		},
 		handler = {
 			connected = function(self)
-				print("[UDP/TESTER] connected listener")
+				print("[UDP/TESTER] connected")
 			end,
 			closed = function(self)
-				print("[UDP/TESTER] closed listener")
+				print("[UDP/TESTER] closed")
 			end,
 			received = function(self, value)
-				print("[UDP/TESTER] received listener")
+				print("[UDP/TESTER] received " .. value.number)
 			end,
 			pong = function(self, latency)
 				print("[UDP/TESTER] pong listener with latency=" .. latency)
 			end,
 			tick = function(self)
-				print("[UDP/TESTER] tick listener")
+				print("[UDP/TESTER] tick")
+				if (udp_client.is_connected()) then
+					udp_client.send({ number = number }, true)
+					print("[UDP/TESTER] send " .. number)
+					number = number + 1
+				end
 			end,
 		}
 	})
@@ -34,8 +41,10 @@ function init(self)
 end
 
 function update(self, dt)
-	local r, error = udp_client.update()
-	if (error) then
-		print("[UDP/TESTER] " .. error)
+	if (udp_client.is_connected()) then
+		local r, error = udp_client.update()
+		if (error) then
+			print("[UDP/TESTER] " .. error)
+		end
 	end
 end
