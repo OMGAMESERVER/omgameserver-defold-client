@@ -228,8 +228,8 @@ local function create_next_buffer(sys)
 	return b
 end
 
-local function send_buffer(buffer)
-	local _, error = CLIENT.udp:send(buffer.bytes)
+local function send_buffer(b)
+	local _, error = CLIENT.udp:send(b.bytes)
 	if (error) then
 		if (CLIENT.logging >= LOGGING_DEBUG) then
 			print("[OMGS/CLIENT] send buffer failed with " .. error)
@@ -345,8 +345,8 @@ local function receive()
 	-- Response pong to ping request from server
 	elseif (incoming_sys == HEADER_SYS_PINGREQ) then
 		pong()
-	elseif (buffer:remaining() > 0) then
-		return buffer
+	elseif (buffer.remaining(b) > 0) then
+		return b
 	else
 		return nil
 	end
@@ -383,14 +383,14 @@ local function send(value, reliable)
 	end
 end
 
-local function save_buffer(seq, buffer)
+local function save_buffer(seq, b)
 	local saved = CLIENT.saved[seq]
 	if (saved == nil) then
 		saved = {}
 		CLIENT.saved[seq] = saved
 	end
 
-	saved[#saved + 1] = buffer
+	saved[#saved + 1] = b
 end
 
 
@@ -442,13 +442,9 @@ local function update()
 
 	local b, _ = receive()
 	if (b) then
-		if (CLIENT.logging >= LOGGING_TRACE) then
-			print("[OMGS/CLIENT] received buffer " .. b)
-		end
-
 		if (CLIENT.handler and CLIENT.handler.received) then
-			while (buffer.remaining(b) > 0) do
-				local t, _ = msgpack.decode(buffer)
+			while (buffer.remaining(b) > 0) do			
+				local t, _ = msgpack.decode(b)
 				if (t) then
 					CLIENT.handler:received(t)
 				end
