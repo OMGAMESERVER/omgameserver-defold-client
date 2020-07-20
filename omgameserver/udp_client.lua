@@ -134,6 +134,14 @@ local function connect(options)
 	return 1
 end
 
+local function is_connected()
+	if (CLIENT.udp) then
+		return true
+	else
+		return false
+	end
+end
+
 local function close()
 	if (not CLIENT.udp) then
 		return nil, "client disconnected"
@@ -256,7 +264,7 @@ local function is_disconnected()
 end
 
 local function is_ping_time()
-	return socket_gettime() - CLIENT.last_server_ping_request > CLIENT.ping_interval
+	return (socket_gettime() - CLIENT.last_server_ping_request) > CLIENT.ping_interval
 end
 
 local function receive()
@@ -484,6 +492,7 @@ return {
 	LOGGING_TRACE = LOGGING_TRACE,
 	-- Methods
 	connect = connect,
+	is_connected = is_connected,
 	closse = close,
 	send = send,
 	update = update,
