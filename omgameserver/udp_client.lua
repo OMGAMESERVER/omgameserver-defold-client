@@ -363,18 +363,18 @@ local function send(value, reliable)
 		local limit = CLIENT.buffer_size - HEADER_SIZE
 		if (length > limit) then
 			if (CLIENT.logging >= LOGGING_DEBUG) then
-				print("[OMGS/CLIENT] too large data to send, size=" .. length .. ", limit=" .. limit)
+				print("[OMGS/CLIENT] too large data, size=" .. length .. ", limit=" .. limit)
 			end
 
-			return nil, "too large data to send"
+			return nil, "too large data"
 		end
 
 		if (CLIENT.logging >= LOGGING_TRACE) then
-			print("[OMGS/CLIENT] send buffer " .. buffer)
+			print("[OMGS/CLIENT] send buffer " .. b)
 		end
 
 		-- Add to outgoing list
-		CLIENT.outgoing[buffer] = reliable
+		CLIENT.outgoing[b] = reliable
 		CLIENT.empty = false
 
 		return 1
