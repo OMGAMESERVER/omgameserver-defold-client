@@ -486,7 +486,7 @@ return {
 	-- Methods
 	connect = connect,
 	is_connected = is_connected,
-	closse = close,
+	close = close,
 	send = send,
 	update = update,
 }
