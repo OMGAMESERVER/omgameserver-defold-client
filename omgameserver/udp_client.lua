@@ -329,7 +329,6 @@ local function receive()
 	-- Calc latency
 	if (incoming_sys == HEADER_SYS_PONGRES) then
 		CLIENT.last_server_latency = socket_gettime() - CLIENT.last_server_ping_request
-		CLIENT.last_server_ping_request = 0
 
 		if (CLIENT.handler and CLIENT.handler.pong) then
 			CLIENT.handler:pong(CLIENT.last_server_latency)
