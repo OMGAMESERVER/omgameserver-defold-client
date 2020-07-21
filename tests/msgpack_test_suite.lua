@@ -103,6 +103,7 @@ local function test_msgpack_map()
 end
 
 local msgpack_test_suite = function()
+	print("[OMGS/MSGPACK] test suite for msgpack: started")
 	test_msgpack_simpletest()
 	test_msgpack_boolean()
 	test_msgpack_integer()
@@ -110,7 +111,7 @@ local msgpack_test_suite = function()
 	test_msgpack_strings()
 	test_msgpack_array()
 	test_msgpack_map()
-	print("[OMGS/TESTS] test suite for msgpack: passed")
+	print("[OMGS/MSGPACK] test suite for msgpack: passed")
 end
 
 return msgpack_test_suite

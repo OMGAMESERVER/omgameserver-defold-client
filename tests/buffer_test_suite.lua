@@ -116,6 +116,7 @@ local function test_buffer_get_hex()
 end
 
 local buffer_test_suite = function()
+	print("[OMGS/BUFFER] test suite for buffer: started")
 	test_buffer_from_bytes()
 	test_buffer_get_length()
 	test_buffer_remaining()
@@ -131,7 +132,7 @@ local buffer_test_suite = function()
 	test_buffer_read_write_string()
 	test_buffer_write_buffer()
 	test_buffer_get_hex()
-	print("[OMGS/TESTS] test suite for buffer: passed")
+	print("[OMGS/BUFFER] test suite for buffer: passed")
 end
 
 return buffer_test_suite
