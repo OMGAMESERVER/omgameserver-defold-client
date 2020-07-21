@@ -1,42 +1,47 @@
 local udp_client = require("omgameserver.udp_client")
 
-local number = 1
-
+-- Need local instance of echo server - https://github.com/OMGAMESERVER/omgameserver-echo-server
 function init(self)
 	local r, error = udp_client.connect({
 		hostname = "localhost",
 		port = 12345,
 		settings = {
-			tick_interval = 1,
-			loss_simulation_level = 0,
-			logging = udp_client.LOGGING_TRACE
+			loss_simulation_level = 0.4,
+			logging = udp_client.LOGGING_DEBUG
 		},
 		handler = {
 			connected = function(self)
-				print("[UDP/TESTER] connected")
-			end,
-			closed = function(self)
-				print("[UDP/TESTER] closed")
+				self.number = 1
+				self.waiting = {}
+				self.count = 0
+				self.finished = false
+				print("[UDP/TESTER] test suite for udp_server: started")
 			end,
 			received = function(self, value)
-				print("[UDP/TESTER] received " .. value.number)
-			end,
-			pong = function(self, latency)
-				print("[UDP/TESTER] pong listener with latency=" .. latency)
+				if (self.waiting[value.number]) then
+					self.waiting[value.number] = nil
+					self.count = self.count - 1
+					if (self.finished) then
+						print("[UDP/TESTER] test suite for udp_server: passed")
+					end
+				end
 			end,
 			tick = function(self)
-				print("[UDP/TESTER] tick")
-				if (udp_client.is_connected()) then
-					udp_client.send({ number = number }, true)
-					print("[UDP/TESTER] send " .. number)
-					number = number + 1
+				if (udp_client.is_connected() and not self.finished) then
+					udp_client.send({ number = self.number}, true)
+					self.waiting[self.number] = true
+					self.count = self.count + 1
+					self.number = self.number + 1
+					if (self.number > 100) then
+						self.finished = true
+					end
 				end
 			end,
 		}
 	})
 
 	if (error) then
-		print("[UDPUDP/TESTER] " .. error)
+		print("[UDP/TESTER] " .. error)
 	end
 end
 
